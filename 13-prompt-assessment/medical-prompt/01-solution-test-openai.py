@@ -3,45 +3,20 @@ import json
 from myprompts import MEDICAL_PROMPT
 
 # Read API key from file
-api_key_path = r"E:\Lenovo Ideapad 330\company-material\digital-workforce-transformation\ai-upskill-8\key-vault\openai\api.key"
+api_key_path = r"E:\Lenovo Ideapad 330\company-material\digital-workforce-transformation\ai-ey-upskill-13\key-vault\openai\api.key"
 
 with open(api_key_path, "r") as f:
     api_key = f.read().strip()
 
-# Initialize OpenAI client
-client = OpenAI(api_key=api_key)
 
 # Select model
 MODEL = "gpt-3.5-turbo"
 
+# Initialize OpenAI client
+client = ChatOpenAI(api_key=api_key, model=MODEL)
+
 
 def build_prompt(user_query):
-
-    # Prompt injection using formatted template
-    prompt = f"""
-SYSTEM:
-You are a certified medical assistant
-Answer only medical queries
-
-TASK:
-Answer the query in detail
-
-CONSTRAINTS:
-- No hallucination
-- No diagnosis
-
-OUTPUT:
-{{
-    "condition": "",
-    "symptoms": [],
-    "treatment": [],
-    "confidence": "",
-    "notes": ""
-}}
-
-USER QUERY:
-{{{user_query}}}
-"""
     
     # Use a named replacement to match templates that expect '{user_query}'
     prompt2 = MEDICAL_PROMPT.format(user_query=user_query, context=open("diabetes_context.txt").read() if open("diabetes_context.txt", "r") else "")
@@ -75,13 +50,15 @@ def chat():
         try:
 
             # LLM call using Responses API
-            response = client.responses.create(
+            response = client.invoke(
                 model=MODEL,
-                input=final_prompt
+                messages=[
+                    {"role": "user", "content": final_prompt}
+                ]
             )
 
             # Extract model output
-            ai_reply = response.output_text
+            ai_reply = response.choices[0].message.content
 
             # Pretty print JSON if possible
             try:

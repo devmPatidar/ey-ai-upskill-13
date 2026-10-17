@@ -6,7 +6,7 @@ from groq import Groq
 
 # Read API key from file
 
-f = open(r"E:\Lenovo Ideapad 330\company-material\digital-workforce-transformation\ai-upskill-12\key-vault\groq\api.key")
+f = open(r"E:\Lenovo Ideapad 330\company-material\digital-workforce-transformation\ai-ey-upskill-13\key-vault\groq\api.key")
 groq_api_key = f.read()
 f.close()
 
@@ -14,7 +14,7 @@ f.close()
 client = Groq(api_key=groq_api_key)
 
 # Select model
-MODEL = "llama-3.1-8b-instant"
+MODEL = "openai/gpt-oss-20b"
 
 
 def build_prompt(user_query):
@@ -57,12 +57,12 @@ def chat():
 
             # LLM call using Responses API
             response = client.chat.completions.create(
-                model="llama-3.1-8b-instant",
+                model=MODEL,
                 messages=[
                     {"role": "system", "content": "You are a certified medical assistant."},
                     {"role": "user", "content": final_prompt}
                 ],
-                max_tokens=500,
+                max_tokens=2000,
             )
 
             # Extract model output

@@ -9,6 +9,7 @@ Answer the query in detail
 CONSTRAINTS:
 - No hallucination
 - No diagnosis
+- Use only the context provided
 
 CONTEXT:
 {context}
